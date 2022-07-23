@@ -11,8 +11,11 @@ myfun = function(x) {
 aml_file = "./data/aml.csv"
 
 dat = read.csv(aml_file)
+## Remove odd records
+dat <- dat[-c(6, 9, 11, 18, 19, 22, 40), ]
 dat <- dat %>%
-  filter(R != "")
+  filter(R != "") %>%
+  mutate(DOR = mdy(DOR))
 
 names(dat)
 
@@ -49,7 +52,7 @@ bmc.df = melt(bmc.df, id.vars = c("ID", "dot", "dor", "txage", "relapse",
                                   "abd", "ci", "mtx", "mmf", "e", "agvhd", "cgvhd"), 
                 variable.name = "test", value.name = "bdate")
 bmc.df$bdate = mdy(bmc.df$bdate)
-bmc.df$dot = ymd(bmc.df$dot)
+bmc.df$dot = mdy(bmc.df$dot)
 bmc.df$dor = ymd(bmc.df$dor)
 bmc.df$btime = bmc.df$bdate - bmc.df$dot
 bmc.df$rtime = bmc.df$dor - bmc.df$dot
@@ -80,8 +83,10 @@ write.csv(bmc.df, "./data/aml.bmc.df.csv", row.names = FALSE)
 ## Peripheral blood
 
 dat = read.csv(aml_file)
+dat <- dat[-c(6, 9, 11, 18, 19, 22, 40), ]
 dat <- dat %>%
-  filter(R != "")
+  filter(R != "") %>%
+  mutate(DOR = mdy(DOR))
 
 names(dat)
 
@@ -118,7 +123,7 @@ pbc.df = melt(pbc.df, id.vars = c("ID", "dot", "dor", "txage", "relapse",
                                   "abd", "ci", "mtx", "mmf", "e", "agvhd", "cgvhd"), 
               variable.name = "test", value.name = "pdate")
 pbc.df$pdate = mdy(pbc.df$pdate)
-pbc.df$dot = ymd(pbc.df$dot)
+pbc.df$dot = mdy(pbc.df$dot)
 pbc.df$dor = ymd(pbc.df$dor)
 pbc.df$ptime = pbc.df$pdate - pbc.df$dot
 pbc.df$rtime = pbc.df$dor - pbc.df$dot

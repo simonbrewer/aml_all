@@ -12,7 +12,8 @@ all_file = "./data/all.csv"
 
 dat = read.csv(all_file)
 dat <- dat %>%
-  filter(R != "")
+  filter(R != "") %>%
+  mutate(DOR = mdy(DOR))
 
 names(dat)
 
@@ -81,7 +82,8 @@ write.csv(bmc.df, "./data/all.bmc.df.csv", row.names = FALSE)
 
 dat = read.csv(all_file)
 dat <- dat %>%
-  filter(R != "")
+  filter(R != "") %>%
+  mutate(DOR = mdy(DOR))
 
 names(dat)
 
