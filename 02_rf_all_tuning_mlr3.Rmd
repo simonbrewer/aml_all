@@ -1,0 +1,158 @@
+---
+title: "ALL chimerism dataset: tuning `ranger` with **mlr3**"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'rf_all_tuning_mlr3.html'))})
+author:
+  - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
+  - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    fig_caption: true
+---
+
+## Libraries
+
+```{r message=FALSE, warning=FALSE}
+
+set.seed(42)
+library(tidyverse)
+library(mlr3verse)
+library(mlr3tuning)
+library(mlr3tuningspaces)
+
+```
+
+
+## Data
+
+Read in data
+```{r}
+
+dat = read.csv("./data/all.all.df.csv")
+
+```
+
+Make outcome a binary variable (0/1 relapse)
+```{r}
+
+dat$rbin = factor(dat$rbin, levels = c("yes", "no"))
+
+```
+
+Filter out any tests that are post-relapse
+
+```{r}
+
+dat = dat[which(dat$bdate < dat$dor | is.na(dat$dor)), ]
+
+```
+
+Filter out relapse >720 days
+
+```{r}
+
+dat = dat[which(dat$rbin == "no" | dat$rtime < 720),]
+
+```
+
+Filter out any missing tests
+```{r}
+
+dat = dat[!is.na(dat$bmc_cdw) & !is.na(dat$bmc_cd3) & 
+                  !is.na(dat$bmc_cd15) & !is.na(dat$bmc_cd34) &
+                  !is.na(dat$pbc_cdw) & !is.na(dat$pbc_cd3) & 
+                  !is.na(dat$pbc_cd15) & !is.na(dat$pbc_cd34),]
+
+```
+
+Get $p(relapse)$ for baseline model
+
+```{r}
+
+prbin = sum(as.numeric(dat$rbin)-1) / nrow(dat)
+
+```
+
+
+```{r}
+
+# dat2 <- dat %>%
+#   select(rbin, txage, hla, tbi, abd, ci, mtx, mmf, agvhd, cgvhd,
+#          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
+#          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
+dat2 <- dat %>%
+  select(rbin, txage, ghgp, hla, agvhd, 
+         bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
+         pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
+
+dat2 <- dat2 %>% 
+  mutate_if(is.character, as.factor)  %>% 
+  mutate_if(is.integer, as.numeric) %>%
+  # mutate(abd = tolower(abd)) %>%
+  drop_na() %>%
+  droplevels()
+
+```
+
+## Tuning
+
+### Set up task
+
+```{r}
+
+task_chim <- TaskClassif$new(id = "all", backend = dat2, 
+                              target = "rbin")
+
+```
+
+Define patients for use in cross validation
+
+```{r}
+
+# task_chim$col_roles$group <- "ID"
+task_chim$set_col_roles("ID", remove_from = 'feature')
+
+```
+
+# print keys and learners
+
+```{r}
+
+as.data.table(mlr_tuning_spaces)
+
+```
+
+
+# tune learner with default search space
+
+```{r echo=FALSE}
+lgr::get_logger("mlr3")$set_threshold("warn")
+lgr::get_logger("bbotk")$set_threshold("warn")
+```
+
+```{r}
+
+instance_rf = tune(
+  method = "grid_search",
+  task = task_chim,
+  learner = lts(lrn("classif.ranger")),
+  resampling = rsmp ("cv", folds = 5),
+  measure = msr("classif.bacc"),
+  term_evals = 100
+)
+
+```
+
+
+```{r}
+
+instance_rf$result
+
+```
+
