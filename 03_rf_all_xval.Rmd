@@ -150,9 +150,9 @@ rsmp_xv <- rsmp("repeated_cv", folds = 5, repeats = 10)
 ```{r}
 
 lrn_rf <- lrn("classif.ranger",
-              mtry.ratio = 0.78,
-              sample.fraction = 0.9,
-              num.trees = 250, 
+              mtry.ratio = 0.89,
+              sample.fraction = 0.8,
+              num.trees = 1500, 
               replace = FALSE,
               predict_type = "prob")
 

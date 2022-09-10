@@ -334,9 +334,9 @@ msr_spec &lt;- msr(&quot;classif.specificity&quot;)</code></pre>
 <div id="learner" class="section level3">
 <h3>Learner</h3>
 <pre class="r"><code>lrn_rf &lt;- lrn(&quot;classif.ranger&quot;,
-              mtry.ratio = 0.78,
-              sample.fraction = 0.9,
-              num.trees = 250, 
+              mtry.ratio = 0.89,
+              sample.fraction = 0.8,
+              num.trees = 1500, 
               replace = FALSE,
               predict_type = &quot;prob&quot;)</code></pre>
 </div>
@@ -355,9 +355,9 @@ pop = po(&quot;learner_cv&quot;, lrn_rf) %&gt;&gt;%
   po(&quot;tunethreshold&quot;)
 
 pop$train(task_chim)</code></pre>
-<pre><code>## INFO  [11:54:43.673] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;all&#39; (iter 2/3) 
-## INFO  [11:54:43.735] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;all&#39; (iter 3/3) 
-## INFO  [11:54:43.784] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;all&#39; (iter 1/3)</code></pre>
+<pre><code>## INFO  [11:59:43.475] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;all&#39; (iter 2/3) 
+## INFO  [11:59:43.625] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;all&#39; (iter 3/3) 
+## INFO  [11:59:43.757] [mlr3] Applying learner &#39;classif.ranger&#39; on task &#39;all&#39; (iter 1/3)</code></pre>
 <pre><code>## $tunethreshold.output
 ## NULL</code></pre>
 <pre class="r"><code>pop$state</code></pre>
@@ -366,39 +366,39 @@ pop$train(task_chim)</code></pre>
 ## Ranger result
 ## 
 ## Call:
-##  ranger::ranger(dependent.variable.name = task$target_names, data = task$data(),      probability = self$predict_type == &quot;prob&quot;, case.weights = task$weights$weight,      num.threads = 1L, num.trees = 250L, replace = FALSE, sample.fraction = 0.9,      mtry = 10L) 
+##  ranger::ranger(dependent.variable.name = task$target_names, data = task$data(),      probability = self$predict_type == &quot;prob&quot;, case.weights = task$weights$weight,      num.threads = 1L, num.trees = 1500L, replace = FALSE, sample.fraction = 0.8,      mtry = 12L) 
 ## 
 ## Type:                             Probability estimation 
-## Number of trees:                  250 
+## Number of trees:                  1500 
 ## Sample size:                      163 
 ## Number of independent variables:  14 
-## Mtry:                             10 
+## Mtry:                             12 
 ## Target node size:                 10 
 ## Variable importance mode:         none 
 ## Splitrule:                        gini 
-## OOB prediction error (Brier s.):  0.08656893 
+## OOB prediction error (Brier s.):  0.08790349 
 ## 
 ## $classif.ranger$log
 ## Empty data.table (0 rows and 3 cols): stage,class,msg
 ## 
 ## $classif.ranger$train_time
-## [1] 0.03
+## [1] 0.122
 ## 
 ## $classif.ranger$param_vals
 ## $classif.ranger$param_vals$mtry.ratio
-## [1] 0.78
+## [1] 0.89
 ## 
 ## $classif.ranger$param_vals$num.threads
 ## [1] 1
 ## 
 ## $classif.ranger$param_vals$num.trees
-## [1] 250
+## [1] 1500
 ## 
 ## $classif.ranger$param_vals$replace
 ## [1] FALSE
 ## 
 ## $classif.ranger$param_vals$sample.fraction
-## [1] 0.9
+## [1] 0.8
 ## 
 ## 
 ## $classif.ranger$task_hash
@@ -456,7 +456,7 @@ pop$train(task_chim)</code></pre>
 ## $tunethreshold
 ## $tunethreshold$threshold
 ##       yes        no 
-## 0.4493833 0.8095235</code></pre>
+## 0.4280551 0.5174948</code></pre>
 <pre class="r"><code>gr = po(lrn_rf) %&gt;&gt;%
   po(&quot;threshold&quot;, param_vals = list(thresholds = 0.3))</code></pre>
 </div>
@@ -465,17 +465,17 @@ pop$train(task_chim)</code></pre>
 <pre class="r"><code>rr = resample(task_chim, lrn_rf, rsmp_xv, store_models = FALSE)
 rr$aggregate(c(msr_acc, msr_bacc, msr_auc, msr_sens, msr_spec))</code></pre>
 <pre><code>##         classif.acc        classif.bacc         classif.auc classif.sensitivity 
-##           0.8596023           0.7674960           0.9246391           0.5894091 
+##           0.8589773           0.7624559           0.9198957           0.5762670 
 ## classif.specificity 
-##           0.9455830</code></pre>
+##           0.9486449</code></pre>
 <pre class="r"><code>rr = resample(task_chim, gr, rsmp_xv, store_models = FALSE)
 rr$aggregate(c(msr_acc, msr_bacc, msr_auc, msr_sens, msr_spec))</code></pre>
 <pre><code>## Warning: Measure &#39;classif.auc&#39; is missing predict type &#39;prob&#39; of learner
 ## &#39;classif.ranger.threshold&#39;</code></pre>
 <pre><code>##         classif.acc        classif.bacc         classif.auc classif.sensitivity 
-##           0.8460985           0.8473946           0.9221346           0.8455289 
+##           0.8338258           0.8334044           0.9161394           0.8298297 
 ## classif.specificity 
-##           0.8492604</code></pre>
+##           0.8369790</code></pre>
 </div>
 <div class="footnotes">
 <hr />
