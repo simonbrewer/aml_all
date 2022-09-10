@@ -1,0 +1,32 @@
+---
+title: 'AML/ALL Chimerism relapse results'
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+author:
+  - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
+  - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    theme: flatly
+    df_print: paged
+    number_sections: true
+    toc: false
+    toc_float: false
+---
+
+
+- [ALL Bone marrow chimerism plots][plots_all_bmc]: descriptive plots
+- [ALL Peripheral blood chimerism plots][plots_all_pbc]: descriptive plots
+- [AML Bone marrow chimerism plots][plots_aml_bmc]: descriptive plots
+- [AML Peripheral blood chimerism plots][plots_aml_pbc]: descriptive plots
+
+[plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
+[plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
+[plots_aml_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
+[plots_aml_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
+
+
