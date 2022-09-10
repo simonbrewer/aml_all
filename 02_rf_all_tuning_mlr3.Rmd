@@ -87,7 +87,8 @@ prbin = sum(as.numeric(dat$rbin)-1) / nrow(dat)
 #          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 dat2 <- dat %>%
-  select(rbin, txage, ghgp, hla, agvhd, 
+  select(rbin, sex, txage, 
+         rstatprtx, ghgp, hla, agvhd, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
