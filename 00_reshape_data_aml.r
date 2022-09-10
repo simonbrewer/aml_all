@@ -11,11 +11,9 @@ myfun = function(x) {
 aml_file = "./data/aml.csv"
 
 dat = read.csv(aml_file)
-## Remove odd records
-dat <- dat[-c(6, 9, 11, 18, 19, 22, 40), ]
 dat <- dat %>%
-  filter(R != "") %>%
-  mutate(DOR = mdy(DOR))
+  filter(R != "")
+dat$R <- tolower(dat$R)
 
 names(dat)
 
@@ -24,14 +22,23 @@ dat$ID = as.factor(seq(1:nrow(dat)))
 
 ## Convert hla to proportion
 dat$HLA2 <- unlist(lapply(strsplit(dat$HLA, "/"), myfun))
+dat$HLA2[is.na(dat$HLA2)] <- 0
+
+## Fix l/I problem
+dat$G.HLA.GVHD.prophy <- gsub("l", "I", dat$G.HLA.GVHD.prophy)
 
 ## Extract dates
 bmc.df = dat[,c("ID", names(dat[,grep(glob2rx("D*MC"), names(dat))]))]
 
+# bmc.df <- bmc.df %>%
+#   filter(!is.na(D1MC) | !is.na(D2MC) | !is.na(D3MC) |
+#            !is.na(D4MC) | !is.na(D5MC))
+
 ## Extract 'constants'
 bmc.df$dot = dat$DOT
 bmc.df$dor = dat$DOR
-bmc.df$dor[bmc.df$dor == ""] <- "2021-12-01"
+# bmc.df$dor[bmc.df$dor == ""] <- "2021-12-01"
+bmc.df$dor[bmc.df$dor == ""] <- "12/1/21"
 bmc.df$txage = dat$TXAGE
 bmc.df$relapse = dat$R
 bmc.df$sex = dat$G
@@ -43,17 +50,18 @@ bmc.df$ci = dat$CI
 bmc.df$mtx = dat$MTX
 bmc.df$mmf = dat$MMF
 bmc.df$e = dat$E
-bmc.df$agvhd = dat$aGVHD
-bmc.df$cgvhd = dat$cGVHD
+bmc.df$ghgp <- dat$G.HLA.GVHD.prophy
+bmc.df$agvhd = tolower(dat$aGVHD)
+bmc.df$cgvhd = tolower(dat$cGVHD)
 
 ## Melt to long format
 bmc.df = melt(bmc.df, id.vars = c("ID", "dot", "dor", "txage", "relapse",
-                                  "sex", "rstatprtx", "hla", "tbi",
+                                  "sex", "rstatprtx", "ghgp", "hla", "tbi",
                                   "abd", "ci", "mtx", "mmf", "e", "agvhd", "cgvhd"), 
-                variable.name = "test", value.name = "bdate")
+              variable.name = "test", value.name = "bdate")
 bmc.df$bdate = mdy(bmc.df$bdate)
 bmc.df$dot = mdy(bmc.df$dot)
-bmc.df$dor = ymd(bmc.df$dor)
+bmc.df$dor = mdy(bmc.df$dor)
 bmc.df$btime = bmc.df$bdate - bmc.df$dot
 bmc.df$rtime = bmc.df$dor - bmc.df$dot
 
@@ -82,27 +90,18 @@ write.csv(bmc.df, "./data/aml.bmc.df.csv", row.names = FALSE)
 
 ## Peripheral blood
 
-dat = read.csv(aml_file)
-dat <- dat[-c(6, 9, 11, 18, 19, 22, 40), ]
-dat <- dat %>%
-  filter(R != "") %>%
-  mutate(DOR = mdy(DOR))
-
-names(dat)
-
-## Add ID column
-dat$ID = as.factor(seq(1:nrow(dat)))
-
-## Convert hla to proportion
-dat$HLA2 <- unlist(lapply(strsplit(dat$HLA, "/"), myfun))
-
 ## Extract dates
 pbc.df = dat[,c("ID", names(dat[,grep(glob2rx("D*PBC"), names(dat))]))]
+
+pbc.df <- pbc.df %>%
+  filter(!is.na(D1PBC) | !is.na(D2PBC) | !is.na(D3PBC) |
+           !is.na(D4PBC) | !is.na(D5PBC))
 
 ## Extract 'constants'
 pbc.df$dot = dat$DOT
 pbc.df$dor = dat$DOR
-pbc.df$dor[pbc.df$dor == ""] <- "2021-12-01"
+# pbc.df$dor[pbc.df$dor == ""] <- "2021-12-01"
+pbc.df$dor[pbc.df$dor == ""] <- "12/1/21"
 pbc.df$txage = dat$TXAGE
 pbc.df$relapse = dat$R
 pbc.df$sex = dat$G
@@ -114,17 +113,18 @@ pbc.df$ci = dat$CI
 pbc.df$mtx = dat$MTX
 pbc.df$mmf = dat$MMF
 pbc.df$e = dat$E
-pbc.df$agvhd = dat$aGVHD
-pbc.df$cgvhd = dat$cGVHD
+pbc.df$ghgp <- dat$G.HLA.GVHD.prophy
+pbc.df$agvhd = tolower(dat$aGVHD)
+pbc.df$cgvhd = tolower(dat$cGVHD)
 
 ## Melt to long format
 pbc.df = melt(pbc.df, id.vars = c("ID", "dot", "dor", "txage", "relapse",
-                                  "sex", "rstatprtx", "hla", "tbi",
+                                  "sex", "rstatprtx", "ghgp", "hla", "tbi",
                                   "abd", "ci", "mtx", "mmf", "e", "agvhd", "cgvhd"), 
               variable.name = "test", value.name = "pdate")
 pbc.df$pdate = mdy(pbc.df$pdate)
 pbc.df$dot = mdy(pbc.df$dot)
-pbc.df$dor = ymd(pbc.df$dor)
+pbc.df$dor = mdy(pbc.df$dor)
 pbc.df$ptime = pbc.df$pdate - pbc.df$dot
 pbc.df$rtime = pbc.df$dor - pbc.df$dot
 
