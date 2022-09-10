@@ -18,11 +18,17 @@ output:
     toc_float: false
 ---
 
+# Descriptive plots
 
-- [ALL Bone marrow chimerism plots][plots_all_bmc]: descriptive plots
-- [ALL Peripheral blood chimerism plots][plots_all_pbc]: descriptive plots
-- [AML Bone marrow chimerism plots][plots_aml_bmc]: descriptive plots
-- [AML Peripheral blood chimerism plots][plots_aml_pbc]: descriptive plots
+- [ALL Bone marrow chimerism plots][plots_all_bmc]
+- [ALL Peripheral blood chimerism plots][plots_all_pbc]
+- [AML Bone marrow chimerism plots][plots_aml_bmc]
+- [AML Peripheral blood chimerism plots][plots_aml_pbc]
+
+# Tuning
+
+- [ALL chimerism RF tuning][rf_all_tuning_mlr3]
+- [AML chimerism RF tuning][rf_aml_tuning_mlr3]
 
 [plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
 [plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
@@ -30,3 +36,5 @@ output:
 [plots_aml_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
 
 
+[rf_all_tuning_mlr3]: https://simonbrewer.github.io/aml_all/rf_all_tuning_mlr3.html
+[rf_aml_tuning_mlr3]: https://simonbrewer.github.io/aml_all/rf_aml_tuning_mlr3.html
