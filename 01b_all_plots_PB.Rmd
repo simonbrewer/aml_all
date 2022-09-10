@@ -1,5 +1,5 @@
 ---
-title: "Chimerism dataset final - ALL peripheral blood plots"
+title: "ALL chimerism dataset - peripheral blood plots"
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,

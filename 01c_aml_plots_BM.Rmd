@@ -1,5 +1,5 @@
 ---
-title: "Chimerism dataset final - AML bone marrow plots"
+title: "AML chimerism dataset - bone marrow plots"
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
