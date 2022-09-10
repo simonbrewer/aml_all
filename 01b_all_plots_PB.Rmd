@@ -1,5 +1,5 @@
 ---
-title: "Chimerism dataset final - peripheral blood"
+title: "Chimerism dataset final - ALL peripheral blood plots"
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
@@ -28,14 +28,14 @@ library(lubridate)
 ## Data
 
 ```{r}
-all.df = read.csv("./data/all.df.csv")
-names(all.df)
-all.df$ID = as.factor(all.df$ID)
+chim.df = read.csv("./data/aml.all.df.csv")
+names(chim.df)
+chim.df$ID = as.factor(chim.df$ID)
 ```
 
 Remove plot relapse samples
 ```{r}
-plot.df = all.df[which(all.df$pdate < all.df$dor | is.na(all.df$dor)), ]
+plot.df = chim.df[which(chim.df$pdate < chim.df$dor | is.na(chim.df$dor)), ]
 ```
 
 ### CDW proportions
