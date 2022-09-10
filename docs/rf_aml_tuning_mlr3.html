@@ -279,7 +279,8 @@ library(mlr3tuningspaces)</code></pre>
 #          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 dat2 &lt;- dat %&gt;%
-  select(rbin, txage, ghgp, hla, agvhd, 
+  select(rbin, sex, txage, 
+         rstatprtx, ghgp, hla, agvhd, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -395,9 +396,9 @@ task_chim$set_col_roles(&quot;ID&quot;, remove_from = &#39;feature&#39;)</code><
 )</code></pre>
 <pre class="r"><code>instance_rf$result</code></pre>
 <pre><code>##    mtry.ratio replace sample.fraction num.trees learner_param_vals  x_domain
-## 1:  0.5555556   FALSE             0.9       889          &lt;list[5]&gt; &lt;list[4]&gt;
+## 1:  0.8888889   FALSE             0.8       889          &lt;list[5]&gt; &lt;list[4]&gt;
 ##    classif.bacc
-## 1:    0.7569853</code></pre>
+## 1:     0.793652</code></pre>
 </div>
 <div class="footnotes">
 <hr />
