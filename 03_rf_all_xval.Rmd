@@ -1,10 +1,10 @@
 ---
-title: "AML chimerism dataset - xvalidation `ranger` with **mlr3**"
+title: "ALL chimerism dataset - xvalidation `ranger` with **mlr3**"
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
  encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'rf_aml_xvalid_mlr3.html'))})
+ output_file=file.path(dirname(input_file), out_dir, 'rf_all_xvalid_mlr3.html'))})
 author:
   - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
   - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
@@ -32,7 +32,7 @@ library(mlr3verse)
 Read in data
 ```{r}
 
-dat = read.csv("./data/aml.all.df.csv")
+dat = read.csv("./data/all.all.df.csv")
 
 ```
 
@@ -149,9 +149,9 @@ rsmp_xv <- rsmp("repeated_cv", folds = 5, repeats = 10)
 ```{r}
 
 lrn_rf <- lrn("classif.ranger",
-              mtry.ratio = 0.56,
+              mtry.ratio = 0.78,
               sample.fraction = 0.9,
-              num.trees = 900, 
+              num.trees = 250, 
               replace = FALSE,
               predict_type = "prob")
 
@@ -161,6 +161,14 @@ lrn_rf <- lrn("classif.ranger",
 ## Threshold
 
 ```{r}
+
+pop = po("learner_cv", lrn("classif.ranger", 
+                           mtry.ratio = 0.78,
+                           sample.fraction = 0.9,
+                           num.trees = 250, 
+                           replace = FALSE,
+                           predict_type = "prob")) %>>%
+  po("tunethreshold")
 
 pop = po("learner_cv", lrn_rf) %>>%
   po("tunethreshold")
@@ -174,7 +182,7 @@ pop$state
 ```{r}
 
 gr = po(lrn_rf) %>>%
-  po("threshold", param_vals = list(thresholds = 0.25))
+  po("threshold", param_vals = list(thresholds = 0.3))
 
 ```
 

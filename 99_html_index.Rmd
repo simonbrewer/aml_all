@@ -30,6 +30,10 @@ output:
 - [ALL chimerism RF tuning][rf_all_tuning_mlr3]
 - [AML chimerism RF tuning][rf_aml_tuning_mlr3]
 
+# Cross-validation
+
+- [ALL chimerism RF x-validation][rf_all_tuning_mlr3]
+
 [plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
 [plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
 [plots_aml_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
@@ -38,3 +42,6 @@ output:
 
 [rf_all_tuning_mlr3]: https://simonbrewer.github.io/aml_all/rf_all_tuning_mlr3.html
 [rf_aml_tuning_mlr3]: https://simonbrewer.github.io/aml_all/rf_aml_tuning_mlr3.html
+
+[rf_all_xvalid_mlr3]: https://simonbrewer.github.io/aml_all/rf_all_xvalid_mlr3.html
+[rf_aml_xvalid_mlr3]: https://simonbrewer.github.io/aml_all/rf_aml_xvalid_mlr3.html
