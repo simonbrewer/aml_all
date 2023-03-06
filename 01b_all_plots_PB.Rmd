@@ -28,7 +28,7 @@ library(lubridate)
 ## Data
 
 ```{r}
-chim.df = read.csv("./data/aml.all.df.csv")
+chim.df = read.csv("./data/all.all.df.csv")
 names(chim.df)
 chim.df$ID = as.factor(chim.df$ID)
 ```
