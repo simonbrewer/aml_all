@@ -200,4 +200,13 @@ rr$aggregate(c(msr_acc, msr_bacc, msr_auc, msr_sens, msr_spec))
 
 ```
 
+## Cross-validation (baseline)
 
+```{r}
+
+lrn_base <- lrn("classif.featureless",
+              predict_type = "prob")
+rr = resample(task_chim, lrn_base, rsmp_xv, store_models = FALSE)
+rr$aggregate(c(msr_acc, msr_bacc, msr_auc, msr_sens, msr_spec))
+
+```
