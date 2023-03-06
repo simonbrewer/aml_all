@@ -202,7 +202,8 @@ plot.df <- data.frame(test = c(pw$pbc_cdw, p3$pbc_cd3, p15$pbc_cd15, p34$pbc_cd3
                                rep("cd34", nrow(p34))
                       ))
 
-ggline(plot.df, x = "test", y = "yhat", col = "type", 
+ggline(plot.df, x = "test", y = "yhat", col = "type",
+       numeric.x.axis = TRUE, 
        plot_type = "l", size = 1.5, main = "Chimerism values (PB, prob)")
 ```
 
