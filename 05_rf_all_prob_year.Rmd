@@ -1,10 +1,10 @@
 ---
-title: "ALL dataset - rf plots (probability only)"
+title: "ALL dataset - rf plots (transplant year added)"
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
  encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'rf_all_predict.html'))})
+ output_file=file.path(dirname(input_file), out_dir, 'rf_all_year_predict.html'))})
 author:
   - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
   - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
@@ -50,6 +50,8 @@ all.df$dot <- ymd(all.df$dot)
 all.df$dor <- ymd(all.df$dor)
 all.df$bdate <- ymd(all.df$bdate)
 all.df$pdate <- ymd(all.df$pdate)
+## Get trasnplant year
+all.df$tyear <- year(all.df$dot)
 ```
 
 Convert all character strings to factors
@@ -88,7 +90,7 @@ all.df <<- all.df
 #          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 all.df <- all.df %>%
-  select(rbin, sex, txage, 
+  select(rbin, sex, txage, tyear, ## ADDED tyear
          rstatprtx, ghgp, hla, agvhd, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
@@ -161,7 +163,8 @@ vip(lrn_rf$model, num_features = 20, scale = TRUE)
 
 ```{r warning=FALSE}
 
-myvars <- c("txage", "sex", "rstatprtx", "hla", "ghgp", "agvhd",
+myvars <- c("txage", "tyear", "sex", 
+            "rstatprtx", "hla", "ghgp", "agvhd",
             "bmc_cdw", "bmc_cd3", "bmc_cd15", "bmc_cd34",
             "pbc_cdw", "pbc_cd3", "pbc_cd15", "pbc_cd34")
 
@@ -240,6 +243,25 @@ ggline(plot.df, x = "test", y = "yhat", col = "type",
 
 
 ## 2D plots
+
+```{r}
+pd <- pdp::partial(lrn_rf$model, 
+              train = task_chim$data(), 
+              pred.var = c("tyear", "txage"), chull = TRUE, prob = TRUE)
+pdp1 <- plotPartial(pd, main = "TYear vs TAge")
+print(pdp1)
+```
+
+```{r}
+pd <- pdp::partial(lrn_rf$model, 
+              train = task_chim$data(), 
+              pred.var = c("tyear", "ghgp"), chull = TRUE, prob = TRUE)
+p1 <- ggplot(pd, aes(x = tyear, y = yhat, col = ghgp)) + 
+  geom_line(size = 1.5) + 
+  ggtitle(paste("PDP:", i)) +
+  theme_bw()
+print(p1)
+```
 
 ```{r warning=FALSE}
 myvars <- c("sex", "rstatprtx", "ghgp")

@@ -35,10 +35,15 @@ output:
 - [ALL chimerism RF x-validation][rf_all_tuning_mlr3]
 - [AML chimerism RF x-validation][rf_aml_tuning_mlr3]
 
-# Partial dependencies
+# Figures
 
 - [ALL chimerism RF PDP / VIP][rf_all_predict]
 - [AML chimerism RF PDP / VIP][rf_aml_predict]
+
+# Figures (with transplant year)
+
+- [ALL chimerism RF PDP / VIP][rf_all_year_predict]
+- [AML chimerism RF PDP / VIP][rf_aml_year_predict]
 
 [plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
 [plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_all_pbc.html
@@ -54,3 +59,6 @@ output:
 
 [rf_all_predict]: https://simonbrewer.github.io/aml_all/rf_all_predict.html
 [rf_aml_predict]: https://simonbrewer.github.io/aml_all/rf_aml_predict.html
+
+[rf_all_year_predict]: https://simonbrewer.github.io/aml_all/rf_all_year_predict.html
+[rf_aml_year_predict]: https://simonbrewer.github.io/aml_all/rf_aml_year_predict.html
