@@ -1,0 +1,188 @@
+---
+title: "ALL chimerism dataset - LIME plots"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'rf_all_lime.html'))})
+author:
+  - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
+  - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    fig_caption: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+Set random seed for reproducibility
+```{r}
+set.seed(1234)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ggpubr)
+library(lime)       # ML local interpretation
+library(caret)      # ML model building
+library(ranger)
+library(vip)
+library(pdp)
+```
+
+## Data
+
+Read in data
+```{r}
+all.df <- read.csv("./data/all.all.df.csv")
+```
+
+Convert dates
+```{r}
+all.df$dot <- ymd(all.df$dot)
+all.df$dor <- ymd(all.df$dor)
+all.df$bdate <- ymd(all.df$bdate)
+all.df$pdate <- ymd(all.df$pdate)
+```
+
+Convert all character strings to factors
+```{r}
+all.df <- all.df %>% mutate_if(is.character,as.factor)
+```
+
+Make outcome a binary variable (0/1 relapse)
+```{r}
+all.df$rbin <- factor(all.df$rbin, levels = c("yes", "no"))
+```
+
+Filter out any tests that are post-relapse
+```{r}
+all.df <- all.df[which(all.df$bdate < all.df$dor | is.na(all.df$dor)), ]
+```
+
+Filter out relapse >720 days
+```{r}
+all.df <- all.df[which(all.df$rbin == "no" | all.df$rtime < 720),]
+```
+
+Filter out any missing tests
+```{r}
+all.df <- all.df[!is.na(all.df$bmc_cdw) & !is.na(all.df$bmc_cd3) & 
+                   !is.na(all.df$bmc_cd15) & !is.na(all.df$bmc_cd34) &
+                   !is.na(all.df$pbc_cdw) & !is.na(all.df$pbc_cd3) & 
+                   !is.na(all.df$pbc_cd15) & !is.na(all.df$pbc_cd34),]
+all.df <<- all.df
+```
+
+```{r}
+
+# dat2 <- dat %>%
+#   select(rbin, txage, hla, tbi, abd, ci, mtx, mmf, agvhd, cgvhd,
+#          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
+#          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
+all.df <- all.df %>%
+  select(rbin, sex, txage, 
+         rstatprtx, ghgp, hla, agvhd, 
+         bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
+         pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
+
+all.df <- all.df %>% 
+  mutate_if(is.character, as.factor)  %>% 
+  mutate_if(is.integer, as.numeric) %>%
+  # mutate(abd = tolower(abd)) %>%
+  drop_na() %>%
+  droplevels()
+
+```
+
+## Set up for LIME plots
+
+### Set up random forest through caret
+
+```{r}
+
+all.df2 <- all.df %>%
+  select(-ID)
+
+fit.caret <- train(
+  rbin ~ ., 
+  data = all.df2, 
+  method = 'rf'
+)
+
+```
+
+```{r}
+
+fit.caret
+
+```
+
+## Explainers
+
+```{r}
+
+explainer_caret <- lime(all.df2, fit.caret, n_bins = 5)
+summary(explainer_caret)
+
+```
+
+Example explainer plot for patient 1
+```{r}
+
+patientID <- which(all.df$ID == 1)
+
+explanation_caret <- explain(
+  x = all.df2[patientID,], 
+  explainer = explainer_caret, 
+  n_permutations = 5000,
+  dist_fun = "gower",
+  kernel_width = .75,
+  n_features = 10, 
+  feature_select = "highest_weights",
+  labels = "yes"
+)
+
+p1 <- plot_features(explanation_caret)
+
+plot_explanations(explanation_caret)
+
+```
+
+## All patients
+
+```{r message=FALSE}
+
+all_patients = unique(all.df$ID)
+for (i in 1:length(all_patients)) {
+  patientID <- which(all.df$ID == all_patients[i])
+  
+  explanation_caret <- explain(
+    x = all.df2[patientID,], 
+    explainer = explainer_caret, 
+    n_permutations = 5000,
+    dist_fun = "gower",
+    kernel_width = .75,
+    n_features = 10, 
+    feature_select = "highest_weights",
+    labels = "yes"
+  )
+  
+  p1 <- plot_features(explanation_caret) + 
+    ggtitle(paste("Patient", all_patients[i])) + 
+    scale_fill_manual(values = c('firebrick', 'steelblue'), drop = FALSE)
+  print(p1)
+  #ggsave(paste0("./lime_plots/patient_",i,".pdf"), plot = p1)
+}
+
+```
+
+
