@@ -41,8 +41,8 @@ output:
 - [AML chimerism RF PDP / VIP][rf_aml_predict]
 
 [plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
-[plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
-[plots_aml_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
+[plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_all_pbc.html
+[plots_aml_bmc]: https://simonbrewer.github.io/aml_all/plots_aml_bmc.html
 [plots_aml_pbc]: https://simonbrewer.github.io/aml_all/plots_aml_pbc.html
 
 
