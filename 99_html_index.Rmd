@@ -45,6 +45,11 @@ output:
 - [ALL chimerism RF PDP / VIP][rf_all_year_predict]
 - [AML chimerism RF PDP / VIP][rf_aml_year_predict]
 
+# LIME plots
+
+- [ALL chimerism RF LIME][rf_all_lime]
+- [AML chimerism RF LIME][rf_aml_lime]
+
 [plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
 [plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_all_pbc.html
 [plots_aml_bmc]: https://simonbrewer.github.io/aml_all/plots_aml_bmc.html
@@ -62,3 +67,6 @@ output:
 
 [rf_all_year_predict]: https://simonbrewer.github.io/aml_all/rf_all_year_predict.html
 [rf_aml_year_predict]: https://simonbrewer.github.io/aml_all/rf_aml_year_predict.html
+
+[rf_all_lime]: https://simonbrewer.github.io/aml_all/rf_all_lime.html
+[rf_aml_lime]: https://simonbrewer.github.io/aml_all/rf_aml_lime.html
