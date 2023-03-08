@@ -90,7 +90,7 @@ all.df <<- all.df
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 all.df <- all.df %>%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, agvhd, 
+         rstatprtx, ghgp, hla, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -124,6 +124,33 @@ fit.caret <- train(
 
 fit.caret
 
+```
+
+## VIP
+
+Optional rf model --> probably not needed
+
+```{r}
+fit.rf <- randomForest::randomForest(
+  rbin ~ ., 
+  data = all.df2)
+```
+
+```{r}
+vis <- vi(fit.rf, method = "permute", data = all.df2, target = "rbin", 
+          metric = "auc", pred_wrapper = predict, 
+          reference_class = "no", nsim = 100) 
+vip(vis, geom = "boxplot") # Figure 12
+```
+
+```{r}
+p <- ggplot(vis, aes(reorder(Variable, Importance), Importance)) + 
+  geom_bar(stat="identity", color="black", 
+           position=position_dodge()) + 
+  geom_errorbar(aes(ymin = Importance-StDev, 
+                    ymax = Importance+StDev), width = 0.2) +
+  coord_flip() + theme_bw() + scale_x_discrete(name = "Variable")
+print(p)
 ```
 
 ## Explainers
