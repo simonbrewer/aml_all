@@ -89,7 +89,7 @@ aml.df <<- aml.df
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 aml.df <- aml.df %>%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, agvhd, 
+         rstatprtx, ghgp, hla, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -127,9 +127,9 @@ task_chim$set_col_roles("ID", remove_from = 'feature')
 ```{r}
 
 lrn_rf <- lrn("classif.ranger",
-              mtry.ratio = 0.89,
-              sample.fraction = 0.8,
-              num.trees = 900, 
+              mtry.ratio = 0.56,
+              sample.fraction = 0.9,
+              num.trees = 500, 
               replace = FALSE,
               importance = 'permutation',
               predict_type = "prob")
@@ -161,7 +161,7 @@ vip(lrn_rf$model, num_features = 20, scale = TRUE)
 
 ```{r warning=FALSE}
 
-myvars <- c("txage", "sex", "rstatprtx", "hla", "ghgp", "agvhd",
+myvars <- c("txage", "sex", "rstatprtx", "hla", "ghgp", "tbi",
             "bmc_cdw", "bmc_cd3", "bmc_cd15", "bmc_cd34",
             "pbc_cdw", "pbc_cd3", "pbc_cd15", "pbc_cd34")
 
