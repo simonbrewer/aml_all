@@ -92,7 +92,8 @@ all.df <- all.df %>%
   mutate_if(is.integer, as.numeric) %>%
   # mutate(abd = tolower(abd)) %>%
   drop_na() %>%
-  droplevels()
+  droplevels() %>%
+  select(-ID)
 
 ```
 
@@ -106,9 +107,21 @@ all_rf
 ```
 
 ```{r}
-all_viv <- vivi(fit = all_rf, 
-                data = all.df, 
-                response = "rbin",
-                importanceType = "impurity")
+all_vivi <- vivi(fit = all_rf, 
+                 data = all.df, 
+                 response = "rbin",
+                 importanceType = "impurity")
+```
+
+### Heatmap
+
+```{r}
+viviHeatmap(mat = all_vivi)
+```
+
+### Interaction network
+
+```{r}
+viviNetwork(mat = all_vivi)
 ```
 
