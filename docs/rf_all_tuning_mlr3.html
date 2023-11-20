@@ -1489,7 +1489,7 @@ border-radius: 0px;
 <code>ranger</code> with <strong>mlr3</strong></h1>
 <h4 class="author">David C. Shyr<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></h4>
 <h4 class="author">Simon Brewer<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></h4>
-<h4 class="date">08 March, 2023</h4>
+<h4 class="date">20 November, 2023</h4>
 
 </div>
 
@@ -1526,7 +1526,7 @@ model</p>
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 dat2 &lt;- dat %&gt;%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, tbi, 
+         rstatprtx, ghgp, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -1616,9 +1616,9 @@ task_chim$set_col_roles(&quot;ID&quot;, remove_from = &#39;feature&#39;)</code><
 )</code></pre>
 <pre class="r"><code>instance_rf$result</code></pre>
 <pre><code>##    mtry.ratio replace sample.fraction num.trees learner_param_vals  x_domain
-## 1:  0.7777778   FALSE             0.9       223          &lt;list[5]&gt; &lt;list[4]&gt;
+## 1:  0.8888889   FALSE             0.8      1556          &lt;list[5]&gt; &lt;list[4]&gt;
 ##    classif.bacc
-## 1:    0.8685842</code></pre>
+## 1:    0.8514847</code></pre>
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />
