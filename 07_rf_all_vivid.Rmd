@@ -1,0 +1,114 @@
+---
+title: "ALL dataset - `vivid` plots"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'rf_all_vivid.html'))})
+author:
+  - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
+  - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    fig_caption: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+Set random seed for reproducibility
+```{r}
+set.seed(1234)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ggpubr)
+library(ranger)
+library(vivid)
+```
+
+## Data
+
+Read in data
+```{r}
+all.df <- read.csv("./data/all.all.df.csv")
+```
+
+Convert dates
+```{r}
+all.df$dot <- ymd(all.df$dot)
+all.df$dor <- ymd(all.df$dor)
+all.df$bdate <- ymd(all.df$bdate)
+all.df$pdate <- ymd(all.df$pdate)
+```
+
+Convert all character strings to factors
+```{r}
+all.df <- all.df %>% mutate_if(is.character,as.factor)
+```
+
+Make outcome a binary variable (0/1 relapse)
+```{r}
+all.df$rbin <- factor(all.df$rbin, levels = c("yes", "no"))
+```
+
+Filter out any tests that are post-relapse
+```{r}
+all.df <- all.df[which(all.df$bdate < all.df$dor | is.na(all.df$dor)), ]
+```
+
+Filter out relapse >720 days
+```{r}
+all.df <- all.df[which(all.df$rbin == "no" | all.df$rtime < 720),]
+```
+
+Filter out any missing tests
+```{r}
+all.df <- all.df[!is.na(all.df$bmc_cdw) & !is.na(all.df$bmc_cd3) & 
+                   !is.na(all.df$bmc_cd15) & !is.na(all.df$bmc_cd34) &
+                   !is.na(all.df$pbc_cdw) & !is.na(all.df$pbc_cd3) & 
+                   !is.na(all.df$pbc_cd15) & !is.na(all.df$pbc_cd34),]
+all.df <<- all.df
+```
+
+```{r}
+
+all.df <- all.df %>%
+  select(rbin, sex, txage, 
+         rstatprtx, ghgp, tbi, 
+         bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
+         pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
+
+all.df <- all.df %>% 
+  mutate_if(is.character, as.factor)  %>% 
+  mutate_if(is.integer, as.numeric) %>%
+  # mutate(abd = tolower(abd)) %>%
+  drop_na() %>%
+  droplevels()
+
+```
+
+## Random forest
+
+```{r}
+all_rf <- ranger(rbin ~ ., all.df, 
+                 importance = 'impurity', 
+                 probability = TRUE)
+all_rf
+```
+
+```{r}
+all_viv <- vivi(fit = all_rf, 
+                data = all.df, 
+                response = "rbin",
+                importanceType = "impurity")
+```
+
