@@ -89,7 +89,7 @@ aml.df <<- aml.df
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 aml.df <- aml.df %>%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, tbi, 
+         rstatprtx, ghgp, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -161,7 +161,7 @@ vip(lrn_rf$model, num_features = 20, scale = TRUE)
 
 ```{r warning=FALSE}
 
-myvars <- c("txage", "sex", "rstatprtx", "hla", "ghgp", "tbi",
+myvars <- c("txage", "sex", "rstatprtx", "ghgp", "tbi",
             "bmc_cdw", "bmc_cd3", "bmc_cd15", "bmc_cd34",
             "pbc_cdw", "pbc_cd3", "pbc_cd15", "pbc_cd34")
 
@@ -260,14 +260,6 @@ for (i in myvars) {
   print(p1)
   
 }
-```
-
-```{r}
-pd <- pdp::partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = c("txage", "hla"), chull = TRUE, prob = TRUE)
-pdp1 <- plotPartial(pd, main = "hla")
-print(pdp1)
 ```
 
 ```{r warning=FALSE}

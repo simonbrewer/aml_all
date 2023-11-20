@@ -89,7 +89,7 @@ all.df <<- all.df
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 all.df <- all.df %>%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, tbi, 
+         rstatprtx, ghgp, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -161,7 +161,7 @@ vip(lrn_rf$model, num_features = 20, scale = TRUE)
 
 ```{r warning=FALSE}
 
-myvars <- c("txage", "sex", "rstatprtx", "hla", "ghgp", "tbi",
+myvars <- c("txage", "sex", "rstatprtx", "ghgp", "tbi",
             "bmc_cdw", "bmc_cd3", "bmc_cd15", "bmc_cd34",
             "pbc_cdw", "pbc_cd3", "pbc_cd15", "pbc_cd34")
 
@@ -188,11 +188,11 @@ p3 <- partial(lrn_rf$model,
               train = task_chim$data(), 
               pred.var = "pbc_cd3", prob = TRUE) 
 p15 <- partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = "pbc_cd15", prob = TRUE) 
+               train = task_chim$data(), 
+               pred.var = "pbc_cd15", prob = TRUE) 
 p34 <- partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = "pbc_cd34", prob = TRUE) 
+               train = task_chim$data(), 
+               pred.var = "pbc_cd34", prob = TRUE) 
 
 plot.df <- data.frame(test = c(pw$pbc_cdw, p3$pbc_cd3, p15$pbc_cd15, p34$pbc_cd34),
                       yhat = c(pw$yhat, p3$yhat, p15$yhat, p34$yhat),
@@ -218,11 +218,11 @@ p3 <- partial(lrn_rf$model,
               train = task_chim$data(), 
               pred.var = "bmc_cd3", prob = TRUE) 
 p15 <- partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = "bmc_cd15", prob = TRUE) 
+               train = task_chim$data(), 
+               pred.var = "bmc_cd15", prob = TRUE) 
 p34 <- partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = "bmc_cd34", prob = TRUE) 
+               train = task_chim$data(), 
+               pred.var = "bmc_cd34", prob = TRUE) 
 
 plot.df <- data.frame(test = c(pw$bmc_cdw, p3$bmc_cd3, p15$bmc_cd15, p34$bmc_cd34),
                       yhat = c(pw$yhat, p3$yhat, p15$yhat, p34$yhat),
@@ -247,8 +247,8 @@ myvars <- c("sex", "rstatprtx", "ghgp")
 for (i in myvars) {
   # Compute partial dependence data for lstat and rm
   pd <- pdp::partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = c("txage", i), chull = TRUE, prob = TRUE)
+                     train = task_chim$data(), 
+                     pred.var = c("txage", i), chull = TRUE, prob = TRUE)
   
   # Default PDP
   # pdp1 <- plotPartial(pd, main = i)
@@ -260,14 +260,6 @@ for (i in myvars) {
   print(p1)
   
 }
-```
-
-```{r}
-pd <- pdp::partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = c("txage", "hla"), chull = TRUE, prob = TRUE)
-pdp1 <- plotPartial(pd, main = "hla")
-print(pdp1)
 ```
 
 ```{r warning=FALSE}
@@ -303,8 +295,8 @@ myvars <- c("bmc_cdw", "bmc_cd3", "bmc_cd15", "bmc_cd34",
 for (i in myvars) {
   # Compute partial dependence data for lstat and rm
   pd <- partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = c("txage", i), chull = TRUE, prob = TRUE)
+                train = task_chim$data(), 
+                pred.var = c("txage", i), chull = TRUE, prob = TRUE)
   
   # Default PDP
   pdp1 <- plotPartial(pd, main = i)
