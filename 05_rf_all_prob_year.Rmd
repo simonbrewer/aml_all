@@ -91,7 +91,7 @@ all.df <<- all.df
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 all.df <- all.df %>%
   select(rbin, sex, txage, tyear, ## ADDED tyear
-         rstatprtx, ghgp, hla, agvhd, 
+         rstatprtx, ghgp, agvhd, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -164,7 +164,7 @@ vip(lrn_rf$model, num_features = 20, scale = TRUE)
 ```{r warning=FALSE}
 
 myvars <- c("txage", "tyear", "sex", 
-            "rstatprtx", "hla", "ghgp", "agvhd",
+            "rstatprtx", "ghgp", "agvhd",
             "bmc_cdw", "bmc_cd3", "bmc_cd15", "bmc_cd34",
             "pbc_cdw", "pbc_cd3", "pbc_cd15", "pbc_cd34")
 
@@ -282,14 +282,6 @@ for (i in myvars) {
   print(p1)
   
 }
-```
-
-```{r}
-pd <- pdp::partial(lrn_rf$model, 
-              train = task_chim$data(), 
-              pred.var = c("txage", "hla"), chull = TRUE, prob = TRUE)
-pdp1 <- plotPartial(pd, main = "hla")
-print(pdp1)
 ```
 
 ```{r warning=FALSE}
