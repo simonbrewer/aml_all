@@ -86,7 +86,7 @@ prbin = sum(as.numeric(dat$rbin)-1) / nrow(dat)
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 dat2 <- dat %>%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, tbi, 
+         rstatprtx, ghgp, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -150,9 +150,9 @@ rsmp_xv <- rsmp("repeated_cv", folds = 5, repeats = 10)
 ```{r}
 
 lrn_rf <- lrn("classif.ranger",
-              mtry.ratio = 0.778,
-              sample.fraction = 0.9,
-              num.trees = 500, 
+              mtry.ratio = 0.889,
+              sample.fraction = 0.8,
+              num.trees = 1500, 
               replace = FALSE,
               predict_type = "prob")
 
@@ -183,7 +183,7 @@ pop$state
 ```{r}
 
 gr = po(lrn_rf) %>>%
-  po("threshold", param_vals = list(thresholds = 0.3))
+  po("threshold", param_vals = list(thresholds = 0.4))
 
 ```
 
