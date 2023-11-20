@@ -50,6 +50,11 @@ output:
 - [ALL chimerism RF LIME][rf_all_lime]
 - [AML chimerism RF LIME][rf_aml_lime]
 
+# VIVID interaction plots
+
+- [ALL chimerism RF VIVID][rf_all_vivid]
+- [AML chimerism RF VIVID][rf_aml_vivid]
+
 [plots_all_bmc]: https://simonbrewer.github.io/aml_all/plots_all_bmc.html
 [plots_all_pbc]: https://simonbrewer.github.io/aml_all/plots_all_pbc.html
 [plots_aml_bmc]: https://simonbrewer.github.io/aml_all/plots_aml_bmc.html
@@ -70,3 +75,6 @@ output:
 
 [rf_all_lime]: https://simonbrewer.github.io/aml_all/rf_all_lime.html
 [rf_aml_lime]: https://simonbrewer.github.io/aml_all/rf_aml_lime.html
+
+[rf_all_vivid]: https://simonbrewer.github.io/aml_all/rf_all_vivid.html
+[rf_aml_vivid]: https://simonbrewer.github.io/aml_all/rf_aml_vivid.html
