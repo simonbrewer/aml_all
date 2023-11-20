@@ -20,10 +20,6 @@ names(dat)
 ## Add ID column
 dat$ID = as.factor(seq(1:nrow(dat)))
 
-## Convert hla to proportion
-dat$HLA2 <- unlist(lapply(strsplit(dat$HLA, "/"), myfun))
-dat$HLA2[is.na(dat$HLA2)] <- 0
-
 ## Fix l/I problem
 dat$G.HLA.GVHD.prophy <- gsub("l", "I", dat$G.HLA.GVHD.prophy)
 
@@ -43,21 +39,14 @@ bmc.df$txage = dat$TXAGE
 bmc.df$relapse = dat$R
 bmc.df$sex = dat$G
 bmc.df$rstatprtx = dat$RSTATPRTX
-bmc.df$hla = dat$HLA2
 bmc.df$tbi = dat$TBI
-bmc.df$abd = dat$aBD
-bmc.df$ci = dat$CI
-bmc.df$mtx = dat$MTX
-bmc.df$mmf = dat$MMF
-bmc.df$e = dat$E
 bmc.df$ghgp <- dat$G.HLA.GVHD.prophy
 bmc.df$agvhd = tolower(dat$aGVHD)
-bmc.df$cgvhd = tolower(dat$cGVHD)
 
 ## Melt to long format
 bmc.df = melt(bmc.df, id.vars = c("ID", "dot", "dor", "txage", "relapse",
-                                  "sex", "rstatprtx", "ghgp", "hla", "tbi",
-                                  "abd", "ci", "mtx", "mmf", "e", "agvhd", "cgvhd"), 
+                                  "sex", "rstatprtx", "ghgp", "tbi",
+                                  "agvhd"), 
               variable.name = "test", value.name = "bdate")
 bmc.df$bdate = mdy(bmc.df$bdate)
 bmc.df$dot = mdy(bmc.df$dot)
@@ -106,21 +95,14 @@ pbc.df$txage = dat$TXAGE
 pbc.df$relapse = dat$R
 pbc.df$sex = dat$G
 pbc.df$rstatprtx = dat$RSTATPRTX
-pbc.df$hla = dat$HLA2
 pbc.df$tbi = dat$TBI
-pbc.df$abd = dat$aBD
-pbc.df$ci = dat$CI
-pbc.df$mtx = dat$MTX
-pbc.df$mmf = dat$MMF
-pbc.df$e = dat$E
 pbc.df$ghgp <- dat$G.HLA.GVHD.prophy
 pbc.df$agvhd = tolower(dat$aGVHD)
-pbc.df$cgvhd = tolower(dat$cGVHD)
 
 ## Melt to long format
 pbc.df = melt(pbc.df, id.vars = c("ID", "dot", "dor", "txage", "relapse",
-                                  "sex", "rstatprtx", "ghgp", "hla", "tbi",
-                                  "abd", "ci", "mtx", "mmf", "e", "agvhd", "cgvhd"), 
+                                  "sex", "rstatprtx", "ghgp", "tbi",
+                                  "agvhd"), 
               variable.name = "test", value.name = "pdate")
 pbc.df$pdate = mdy(pbc.df$pdate)
 pbc.df$dot = mdy(pbc.df$dot)
