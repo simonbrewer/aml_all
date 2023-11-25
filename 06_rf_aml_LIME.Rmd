@@ -90,7 +90,7 @@ all.df <<- all.df
 #          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 all.df <- all.df %>%
   select(rbin, sex, txage, 
-         rstatprtx, ghgp, hla, tbi, 
+         rstatprtx, ghgp, tbi, 
          bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
          pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
 
@@ -162,27 +162,6 @@ summary(explainer_caret)
 
 ```
 
-Example explainer plot for patient 1
-```{r}
-
-patientID <- which(all.df$ID == 1)
-
-explanation_caret <- explain(
-  x = all.df2[patientID,], 
-  explainer = explainer_caret, 
-  n_permutations = 5000,
-  dist_fun = "gower",
-  kernel_width = .75,
-  n_features = 10, 
-  feature_select = "highest_weights",
-  labels = "yes"
-)
-
-p1 <- plot_features(explanation_caret)
-
-plot_explanations(explanation_caret)
-
-```
 
 ## All patients
 
