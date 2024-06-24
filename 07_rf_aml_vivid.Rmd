@@ -1,0 +1,127 @@
+---
+title: "AML dataset - `vivid` plots"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'rf_aml_vivid.html'))})
+author:
+  - David C. Shyr^[Stanford Medicine, dcshyr@stanford.edu]
+  - Simon Brewer^[University of Utah, simon.brewer@geog.utah.edu]
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    fig_caption: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Libraries
+
+Set random seed for reproducibility
+```{r}
+set.seed(1234)
+```
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(lubridate)
+library(ggpubr)
+library(ranger)
+library(vivid)
+```
+
+## Data
+
+Read in data
+```{r}
+aml.df <- read.csv("./data/aml.all.df.csv")
+```
+
+Convert dates
+```{r}
+aml.df$dot <- ymd(aml.df$dot)
+aml.df$dor <- ymd(aml.df$dor)
+aml.df$bdate <- ymd(aml.df$bdate)
+aml.df$pdate <- ymd(aml.df$pdate)
+```
+
+Convert all character strings to factors
+```{r}
+aml.df <- aml.df %>% mutate_if(is.character,as.factor)
+```
+
+Make outcome a binary variable (0/1 relapse)
+```{r}
+aml.df$rbin <- factor(aml.df$rbin, levels = c("yes", "no"))
+```
+
+Filter out any tests that are post-relapse
+```{r}
+aml.df <- aml.df[which(aml.df$bdate < aml.df$dor | is.na(aml.df$dor)), ]
+```
+
+Filter out relapse >720 days
+```{r}
+aml.df <- aml.df[which(aml.df$rbin == "no" | aml.df$rtime < 720),]
+```
+
+Filter out any missing tests
+```{r}
+aml.df <- aml.df[!is.na(aml.df$bmc_cdw) & !is.na(aml.df$bmc_cd3) & 
+                   !is.na(aml.df$bmc_cd15) & !is.na(aml.df$bmc_cd34) &
+                   !is.na(aml.df$pbc_cdw) & !is.na(aml.df$pbc_cd3) & 
+                   !is.na(aml.df$pbc_cd15) & !is.na(aml.df$pbc_cd34),]
+aml.df <<- aml.df
+```
+
+```{r}
+
+aml.df <- aml.df %>%
+  select(rbin, sex, txage, 
+         rstatprtx, ghgp, tbi, 
+         bmc_cdw, bmc_cd3, bmc_cd15, bmc_cd34, 
+         pbc_cdw, pbc_cd3, pbc_cd15, pbc_cd34, ID)
+
+aml.df <- aml.df %>% 
+  mutate_if(is.character, as.factor)  %>% 
+  mutate_if(is.integer, as.numeric) %>%
+  # mutate(abd = tolower(abd)) %>%
+  drop_na() %>%
+  droplevels() %>%
+  select(-ID)
+
+```
+
+## Random forest
+
+```{r}
+aml_rf <- ranger(rbin ~ ., aml.df, 
+                 importance = 'impurity', 
+                 probability = TRUE)
+aml_rf
+```
+
+```{r}
+aml_vivi <- vivi(fit = aml_rf, 
+                 data = aml.df, 
+                 response = "rbin",
+                 importanceType = "impurity")
+```
+
+### Heatmap
+
+```{r}
+viviHeatmap(mat = aml_vivi)
+```
+
+### Interaction network
+
+```{r}
+viviNetwork(mat = aml_vivi)
+```
+
