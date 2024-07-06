@@ -13,7 +13,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, dpi=300)
 ```
 
 ## Libraries
@@ -46,6 +46,7 @@ ggboxplot(plot.df, x = "relapse", y = "bmc_cdw",
           color = "relapse", add = "jitter", main = "BM CD (Whole)") +
   stat_compare_means(label.y = 20, method = "wilcox.test") + 
   scale_y_continuous(limits = c(0,100))
+#ggsave("./plots/01a_01.png")
 ```
 
 - Time plots
@@ -55,6 +56,7 @@ ggscatter(plot.df, x = "btime", y = "bmc_cdw", col = "relapse", main = "BM CD (W
 p1 = ggline(plot.df, x = "btime", y = "bmc_cdw", col = "ID", 
        facet.by = "relapse", numeric.x.axis = TRUE, main = "BM CD (Whole)")
 ggpar(p1, legend = "none")
+#ggsave("./plots/01a_02.png")
 ```
 
 - Boxplots by testing period
